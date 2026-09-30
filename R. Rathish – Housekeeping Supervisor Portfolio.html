@@ -22,7 +22,7 @@ a{color:inherit}
 section{padding:84px 0}
 h2{font-size:clamp(2rem,4vw,2.7rem);font-weight:600;margin-bottom:12px}
 .lede{color:var(--muted);max-width:60ch;margin:0 0 40px}
-header.nav{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0px);background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.nav{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0px);background:var(--bg);background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
 .brand{font-family:"Cormorant Garamond",serif;font-weight:700;font-size:1.35rem;text-decoration:none}
 nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0;font-size:.95rem}
@@ -79,7 +79,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 footer ul{display:flex;gap:18px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
 @media (max-width:760px){
 .burger{display:block}
-nav ul{display:none;position:absolute;top:calc(64px + env(safe-area-inset-top,0px));left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 24px}
+nav ul{display:none;position:absolute;z-index:30;top:calc(64px + env(safe-area-inset-top,0px));left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 24px}
 nav ul.open{display:flex}nav li a{display:block;padding:12px 0}
 .two{grid-template-columns:1fr;gap:32px}section{padding:60px 0}.hero{padding:70px 0}
 }
@@ -153,7 +153,7 @@ nav ul.open{display:flex}nav li a{display:block;padding:12px 0}
 </div></div></section>
 
 <section id="education" style="background:var(--surface)"><div class="wrap">
-<h2>Education &amp; training</h2><p class="lede">&nbsp;</p>
+<h2>Education &amp; training</h2><p class="lede">Academic background and practical housekeeping training.</p>
 <div class="jobs">
 <article class="job"><header><h3>B.Sc. Hotel Management</h3><span class="when">2021 – 2024</span></header><p class="where" style="margin:0">Coastal Elango Institute of Hotel Management, Namakkal</p></article>
 <article class="job"><header><h3>Internship, Housekeeping</h3><span class="when">90 days</span></header><p class="where" style="margin:0">Four Points by Sheraton · On-the-job training in housekeeping</p></article>
@@ -169,7 +169,7 @@ nav ul.open{display:flex}nav li a{display:block;padding:12px 0}
 </ol></div></section>
 
 <section style="background:var(--surface)"><div class="wrap">
-<h2>Professional strengths</h2><p class="lede">&nbsp;</p>
+<h2>Professional strengths</h2><p class="lede">Leadership and workplace qualities that support housekeeping operations.</p>
 <div class="strengths"><div>Public speaking</div><div>Leadership &amp; team collaboration</div><div>Analytical thinking</div><div>Adaptive learner</div><div>Emotional intelligence</div></div>
 </div></section>
 
@@ -189,20 +189,92 @@ nav ul.open{display:flex}nav li a{display:block;padding:12px 0}
 </div></footer>
 
 <script>
-var b=document.querySelector('.burger'),m=document.getElementById('menu');
-b.addEventListener('click',function(){var o=m.classList.toggle('open');b.setAttribute('aria-expanded',o)});
-m.addEventListener('click',function(e){if(e.target.tagName==='A'){m.classList.remove('open');b.setAttribute('aria-expanded',false)}});
-document.getElementById('y').textContent=new Date().getFullYear();
-document.documentElement.classList.add('js');
 (function(){
-var els=document.querySelectorAll('main section:not(.hero) h2,.lede,.job,.skill,.strengths div,.tl li,.facts>div,.clist>*,#profile p');
-els.forEach(function(e,i){e.classList.add('rv');e.style.setProperty('--d',((i%4)*0.08)+'s')});
-if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return}
-var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.12});
-els.forEach(function(e){io.observe(e)});
-var tl=document.querySelector('.tl');
-function prog(){var r=tl.getBoundingClientRect(),h=window.innerHeight;var p=Math.min(1,Math.max(0,(h*0.7-r.top)/r.height));tl.style.setProperty('--p',(p*100)+'%')}
-window.addEventListener('scroll',prog,{passive:true});prog();
+  'use strict';
+
+  var root = document.documentElement;
+  root.classList.add('js');
+
+  var burger = document.querySelector('.burger');
+  var menu = document.getElementById('menu');
+  var year = document.getElementById('y');
+
+  if (year) {
+    year.textContent = new Date().getFullYear();
+  }
+
+  if (burger && menu) {
+    burger.addEventListener('click', function(){
+      var isOpen = menu.classList.toggle('open');
+      burger.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    menu.addEventListener('click', function(e){
+      if (e.target.closest('a')) {
+        menu.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.addEventListener('click', function(e){
+      if (window.innerWidth <= 760 &&
+          menu.classList.contains('open') &&
+          !menu.contains(e.target) &&
+          !burger.contains(e.target)) {
+        menu.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    window.addEventListener('resize', function(){
+      if (window.innerWidth > 760) {
+        menu.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  var els = document.querySelectorAll(
+    'main section:not(.hero) h2,.lede,.job,.skill,.strengths div,.tl li,.facts>div,.clist>*,#profile p'
+  );
+
+  els.forEach(function(el, i){
+    el.classList.add('rv');
+    el.style.setProperty('--d', ((i % 4) * 0.08) + 's');
+  });
+
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {threshold: 0.12});
+
+    els.forEach(function(el){ observer.observe(el); });
+  }
+
+  var timeline = document.querySelector('.tl');
+
+  if (timeline) {
+    function updateTimeline(){
+      var rect = timeline.getBoundingClientRect();
+      var viewportHeight = window.innerHeight;
+      var progress = Math.min(
+        1,
+        Math.max(0, (viewportHeight * 0.7 - rect.top) / Math.max(rect.height, 1))
+      );
+      timeline.style.setProperty('--p', (progress * 100) + '%');
+    }
+
+    window.addEventListener('scroll', updateTimeline, {passive: true});
+    window.addEventListener('resize', updateTimeline);
+    updateTimeline();
+  }
 })();
 </script>
 </body>
